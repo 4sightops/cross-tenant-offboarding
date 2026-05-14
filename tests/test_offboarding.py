@@ -27,4 +27,3 @@ def test_dry_run_execution_records_safe_actions():
     assert len(report.actions) == 8
     assert {action.status for action in report.actions} == {"dry_run"}
     assert workflow.audit()[-1].event_type == "execution"
-

@@ -16,6 +16,30 @@ class MockTenantProvider:
     def plan_actions(self, account: AccountRecord, dry_run: bool) -> list[ActionRecord]:
         status = "dry_run" if dry_run else "succeeded"
         prefix = "Would" if dry_run else "Did"
+        if account.provider == "okta":
+            return [
+                ActionRecord(
+                    tenant=account.tenant,
+                    provider=account.provider,
+                    action="suspend_user",
+                    status=status,
+                    detail=f"{prefix} suspend SaaS identity account for {account.subject}.",
+                ),
+                ActionRecord(
+                    tenant=account.tenant,
+                    provider=account.provider,
+                    action="clear_sessions",
+                    status=status,
+                    detail=f"{prefix} clear active SaaS sessions.",
+                ),
+                ActionRecord(
+                    tenant=account.tenant,
+                    provider=account.provider,
+                    action="remove_application_groups",
+                    status=status,
+                    detail=f"{prefix} remove {len(account.groups)} SaaS group membership(s).",
+                ),
+            ]
         return [
             ActionRecord(
                 tenant=account.tenant,
@@ -30,6 +54,13 @@ class MockTenantProvider:
                 action="revoke_sessions",
                 status=status,
                 detail=f"{prefix} revoke active sessions.",
+            ),
+            ActionRecord(
+                tenant=account.tenant,
+                provider=account.provider,
+                action="convert_mailbox_to_shared",
+                status=status,
+                detail=f"{prefix} convert Exchange Online mailbox to shared before license removal.",
             ),
             ActionRecord(
                 tenant=account.tenant,
@@ -51,13 +82,13 @@ class MockTenantProvider:
 def demo_providers() -> list[MockTenantProvider]:
     return [
         MockTenantProvider(
-            provider="directory",
+            provider="microsoft-graph",
             tenant="DemoTenant",
             accounts=[
                 AccountRecord(
                     subject="TestUserOne",
                     tenant="DemoTenant",
-                    provider="directory",
+                    provider="microsoft-graph",
                     enabled=True,
                     groups=["Service Desk Readers", "Project Members"],
                     licenses=["Productivity Seat"],
@@ -65,13 +96,13 @@ def demo_providers() -> list[MockTenantProvider]:
             ],
         ),
         MockTenantProvider(
-            provider="saas-directory",
+            provider="okta",
             tenant="ExampleCo",
             accounts=[
                 AccountRecord(
                     subject="TestUserOne",
                     tenant="ExampleCo",
-                    provider="saas-directory",
+                    provider="okta",
                     enabled=True,
                     groups=["Operations"],
                     licenses=["Standard Seat"],
@@ -79,4 +110,3 @@ def demo_providers() -> list[MockTenantProvider]:
             ],
         ),
     ]
-

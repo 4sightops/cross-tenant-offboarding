@@ -2,7 +2,7 @@
 
 This is a clean-room educational/demo implementation inspired by common enterprise automation patterns. It does not contain proprietary code, data, credentials, or confidential business logic from any employer or client.
 
-Cross-Tenant Offboarding demonstrates a safety-first identity lifecycle workflow across synthetic tenants. It uses mock providers and fake accounts to model discovery, review, confirmation, dry-run execution, and audit evidence without contacting real directories, ticketing systems, mail systems, or customer environments.
+Cross-Tenant Offboarding demonstrates a safety-first identity lifecycle workflow across synthetic tenants. It uses Microsoft Graph-style, Exchange Online-style, and SaaS identity mock providers to model discovery, review, confirmation, dry-run execution, mailbox handling, license removal, and audit evidence without contacting real directories, ticketing systems, mail systems, or customer environments.
 
 ## Architecture
 
@@ -10,8 +10,9 @@ Cross-Tenant Offboarding demonstrates a safety-first identity lifecycle workflow
 flowchart TD
     Operator["Demo operator"] --> API["FastAPI app"]
     API --> Workflow["Offboarding workflow"]
-    Workflow --> ProviderA["DemoTenant provider"]
-    Workflow --> ProviderB["ExampleCo provider"]
+    Workflow --> ProviderA["Microsoft Graph tenant provider"]
+    Workflow --> ProviderB["Exchange Online mailbox step"]
+    Workflow --> ProviderC["Okta-style SaaS provider"]
     Workflow --> Gate["Typed confirmation gate"]
     Workflow --> Audit["Append-only audit trail"]
     Workflow --> Report["Markdown-style execution summary"]
@@ -23,8 +24,9 @@ flowchart TD
 2. Review account status, group memberships, and license labels.
 3. Require exact typed confirmation before execution.
 4. Execute in dry-run mode by default.
-5. Record an audit event for discovery, confirmation failures, and execution.
-6. Return a technician-readable summary of planned actions.
+5. Model Exchange Online mailbox conversion and forwarding as explicit dry-run actions.
+6. Record an audit event for discovery, confirmation failures, and execution.
+7. Return a technician-readable summary of planned actions.
 
 ## Safety Controls
 
@@ -53,3 +55,12 @@ Open the local API docs path shown by the dev server.
 | `GET /subjects/{subject}/discover` | Discover mock accounts |
 | `POST /offboarding/execute` | Run confirmed dry-run offboarding |
 | `GET /audit` | View audit events |
+
+## Integration Shape
+
+| System | Production-style action represented | Demo action |
+|---|---|---|
+| Microsoft Graph | Disable user, revoke sign-in sessions, remove group memberships, remove license assignments | Synthetic `ActionRecord` entries |
+| Exchange Online | Convert mailbox to shared, set forwarding, preserve mailbox before license removal | Dry-run mailbox action records |
+| Okta or SaaS identity provider | Suspend user, clear sessions, remove application groups | Synthetic provider action records |
+| ServiceNow | Attach technician summary to an incident work note | Technician summary string only |
