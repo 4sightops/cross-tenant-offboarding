@@ -1,0 +1,9 @@
+[project]
+name = "cross-tenant-offboarding"
+version = "0.1.0"
+description = "Clean-room demo for cross-tenant offboarding workflows."
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+
