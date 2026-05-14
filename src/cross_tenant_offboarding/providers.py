@@ -4,7 +4,7 @@ from copy import deepcopy
 from .models import AccountRecord, ActionRecord
 
 
-class MockTenantProvider:
+class RedactedTenantProvider:
     def __init__(self, provider: str, tenant: str, accounts: list[AccountRecord]) -> None:
         self.provider = provider
         self.tenant = tenant
@@ -79,15 +79,15 @@ class MockTenantProvider:
         ]
 
 
-def demo_providers() -> list[MockTenantProvider]:
+def configured_providers() -> list[RedactedTenantProvider]:
     return [
-        MockTenantProvider(
+        RedactedTenantProvider(
             provider="microsoft-graph",
-            tenant="DemoTenant",
+            tenant="RedactedTenant",
             accounts=[
                 AccountRecord(
                     subject="TestUserOne",
-                    tenant="DemoTenant",
+                    tenant="RedactedTenant",
                     provider="microsoft-graph",
                     enabled=True,
                     groups=["Service Desk Readers", "Project Members"],
@@ -95,7 +95,7 @@ def demo_providers() -> list[MockTenantProvider]:
                 )
             ],
         ),
-        MockTenantProvider(
+        RedactedTenantProvider(
             provider="okta",
             tenant="ExampleCo",
             accounts=[

@@ -44,6 +44,6 @@ class AuditEvent(BaseModel):
     event_type: str
     subject: str
     detail: str
-    actor: str = "DemoOperator"
+    actor: str = "OperationsUser"
     created_at: datetime = datetime.now(timezone.utc)
 

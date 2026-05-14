@@ -2,11 +2,11 @@ from __future__ import annotations
 
 from fastapi import FastAPI, HTTPException
 from .models import OffboardingRequest
-from .providers import demo_providers
+from .providers import configured_providers
 from .workflow import OffboardingWorkflow
 
 
-workflow = OffboardingWorkflow(demo_providers())
+workflow = OffboardingWorkflow(configured_providers())
 app = FastAPI(title="Cross-Tenant Offboarding")
 
 

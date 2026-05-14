@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 from .models import AuditEvent, DiscoveryReport, OffboardingReport, OffboardingRequest
-from .providers import MockTenantProvider
+from .providers import RedactedTenantProvider
 
 
 class OffboardingWorkflow:
-    def __init__(self, providers: list[MockTenantProvider]) -> None:
+    def __init__(self, providers: list[RedactedTenantProvider]) -> None:
         self.providers = providers
         self.audit_events: list[AuditEvent] = []
 
@@ -47,7 +47,7 @@ class OffboardingWorkflow:
     def audit(self) -> list[AuditEvent]:
         return list(self.audit_events)
 
-    def _provider_for(self, provider_name: str, tenant: str) -> MockTenantProvider:
+    def _provider_for(self, provider_name: str, tenant: str) -> RedactedTenantProvider:
         for provider in self.providers:
             if provider.provider == provider_name and provider.tenant == tenant:
                 return provider

@@ -1,24 +1,24 @@
 import pytest
 from cross_tenant_offboarding.models import OffboardingRequest
-from cross_tenant_offboarding.providers import demo_providers
+from cross_tenant_offboarding.providers import configured_providers
 from cross_tenant_offboarding.workflow import OffboardingWorkflow
 
 
-def test_discovery_returns_all_mock_tenants():
-    workflow = OffboardingWorkflow(demo_providers())
+def test_discovery_returns_all_configured_tenants():
+    workflow = OffboardingWorkflow(configured_providers())
     result = workflow.discover("TestUserOne")
     assert len(result.accounts) == 2
-    assert {account.tenant for account in result.accounts} == {"DemoTenant", "ExampleCo"}
+    assert {account.tenant for account in result.accounts} == {"RedactedTenant", "ExampleCo"}
 
 
 def test_confirmation_must_match_subject():
-    workflow = OffboardingWorkflow(demo_providers())
+    workflow = OffboardingWorkflow(configured_providers())
     with pytest.raises(ValueError):
         workflow.execute(OffboardingRequest(subject="TestUserOne", confirmation="OFFBOARD TestUserTwo"))
 
 
 def test_dry_run_execution_records_safe_actions():
-    workflow = OffboardingWorkflow(demo_providers())
+    workflow = OffboardingWorkflow(configured_providers())
     report = workflow.execute(
         OffboardingRequest(subject="TestUserOne", confirmation="OFFBOARD TestUserOne", dry_run=True)
     )

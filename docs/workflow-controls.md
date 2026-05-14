@@ -1,6 +1,6 @@
 # Workflow Controls
 
-This is a clean-room educational/demo implementation inspired by common enterprise automation patterns. It does not contain proprietary code, data, credentials, or confidential business logic from any employer or client.
+This is a clean-room public implementation inspired by common enterprise automation patterns. It does not contain proprietary code, production data, credentials, or confidential business logic from any employer or client.
 
 ## Production-Style Sequence
 
@@ -14,7 +14,7 @@ This is a clean-room educational/demo implementation inspired by common enterpri
 
 ## Why Mailbox Preservation Is Separate
 
-Offboarding automation should not remove licenses before the mailbox disposition is known. The demo models mailbox conversion as its own action so tests can verify that the planned workflow preserves mailbox access before license cleanup.
+Offboarding automation should not remove licenses before the mailbox disposition is known. The public models mailbox conversion as its own action so tests can verify that the planned workflow preserves mailbox access before license cleanup.
 
 ## What Is Intentionally Omitted
 

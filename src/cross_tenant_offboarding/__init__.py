@@ -1,2 +1,2 @@
-"""Clean-room cross-tenant offboarding demo."""
+"""Clean-room cross-tenant offboarding."""
 
